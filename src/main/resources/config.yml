@@ -41,9 +41,11 @@ mobs:
 # Armor Enchantments
 # (Works only with Skeletons, Zombies and Pigmen)
 #----------------------------------
-# Enables the randomizer, so that all armors have enchants from 0 to the set number
 armor_settings:
+    # Enables the randomizer, so that all armors have enchants from 0 to the set number
     randomizer: true
+    # Enables sets, so that the mobs will have full gold/diamond/... sets, instead of randomly generated armors
+    sets: true
     armors:
         leather:
             # Gives the level of the protection enchantment (from 1 to 4)
@@ -207,3 +209,16 @@ potions:
     # Gives the mobs a health boost potion effect (1 to 255)
     # Set to 0 to disable
     health: 0
+#==================================
+# === Broadcast Messages ===
+#==================================
+messages:
+    # Message to broadcast on box summoning
+    # Leave "" to disable the message
+    summon_message: "A DoomBox has been summoned! Run and prepare for the battle against the dark forces!"
+    # Message to broadcast on box opening
+    # Leave "" to disable the message
+    open_message: "The DoomBox has been opened, join the battle and avert the corruption of our reality!"
+    # Message to broadcast on the kill of all the summoned mobs
+    # Leave "" to disable the message
+    end_message: "The Dark Forces are retreating! Our reality is safe... For Now..."
