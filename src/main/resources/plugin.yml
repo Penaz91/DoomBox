@@ -1,0 +1,12 @@
+name: DoomBox
+main: DoomBox.doombox.doombox
+version: 0.0.1_SNAPSHOT
+author: Penaz
+database: false
+
+commands:
+    summonbox:
+        description: Summons a doombox
+        usage: /summonbox
+        permission: doombox.summonbox
+        permission-message: You need the doombox.summonbox permission to execute this command

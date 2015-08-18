@@ -1,0 +1,209 @@
+# DoomBox Configuration File
+#==================================
+# === Basic Settings ===
+#==================================
+world:
+    # World where the box can be summoned
+    name: "world"
+    # Coordinates where to summon the cauldron, representing the box
+    x: 0
+    y: 10
+    z: 0
+#==================================
+# === Basic Mob Settings ===
+# Set a number to zero to disable the mob summoning
+#==================================
+mobs:
+    # Number of Zombies to summon
+    Zombies: 10
+    # Number of Skeletons to summon
+    Skeletons: 10
+    # Number of Zombie Pigmen to summon
+    Pigmen: 10
+    # Number of Ghasts to Summon
+    Ghast: 2
+    # Number of Witches to Summon
+    Witch: 5
+    # Number of Creepers to Summon
+    Creeper: 5
+    # Number of Spiders to Summon
+    Spider: 10
+    # Number of Endermen to Summon
+    Enderman: 2
+    # Number of Blazes to Summon
+    Blaze: 10
+    # Number of Slimes to Summon
+    Slime: 10
+#==================================
+# === Advanced Mob Settings ===
+#==================================
+#----------------------------------
+# Armor Enchantments
+# (Works only with Skeletons, Zombies and Pigmen)
+#----------------------------------
+# Enables the randomizer, so that all armors have enchants from 0 to the set number
+armor_settings:
+    randomizer: true
+    armors:
+        leather:
+            # Gives the level of the protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_all: 4
+            # Gives the level of projectile protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_projectile: 4
+            # Gives the level of the fire protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_fire: 1 
+            # Gives the level of the blast protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_explosions: 1
+        iron:
+            # Gives the level of the protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_all: 4
+            # Gives the level of projectile protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_projectile: 4
+            # Gives the level of the fire protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_fire: 1 
+            # Gives the level of the blast protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_explosions: 1
+        gold:
+            # Gives the level of the protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_all: 4
+            # Gives the level of projectile protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_projectile: 4
+            # Gives the level of the fire protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_fire: 1 
+            # Gives the level of the blast protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_explosions: 1
+        chain:
+            # Gives the level of the protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_all: 4
+            # Gives the level of projectile protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_projectile: 4
+            # Gives the level of the fire protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_fire: 1 
+            # Gives the level of the blast protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_explosions: 1
+        diamond:
+            # Gives the level of the protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_all: 4
+            # Gives the level of projectile protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_projectile: 4
+            # Gives the level of the fire protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_fire: 1 
+            # Gives the level of the blast protection enchantment (from 1 to 4)
+            # Set to 0 to disable
+            protection_explosions: 1
+#----------------------------------
+# Weapon Enchantments
+# (The weapon assigned is always random)
+#----------------------------------
+weapon_settings:
+    #Enables the randomizer, giving each weapon an enchant between 0 and the set number
+    randomizer: true
+    weapons:
+        swords:
+            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Set to 0 to disable
+            sharpness: 5
+            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Set to 0 to disable
+            smite: 5
+            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Set to 0 to disable
+            BOA: 5
+            # Gives the fire aspect enchantment (from 1 to 2)
+            # Set to 0 to disable
+            fire: 2
+            # Gives the knockback enchantment (from 1 to 2)
+            # Set to 0 to disable
+            knockback: 2
+        axes:
+            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Set to 0 to disable
+            sharpness: 5
+            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Set to 0 to disable
+            smite: 5
+            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Set to 0 to disable
+            BOA: 5
+            # Gives the fire aspect enchantment (from 1 to 2)
+            # Set to 0 to disable
+            fire: 2
+            # Gives the knockback enchantment (from 1 to 2)
+            # Set to 0 to disable
+            knockback: 2
+        hoes:
+            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Set to 0 to disable
+            sharpness: 5
+            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Set to 0 to disable
+            smite: 5
+            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Set to 0 to disable
+            BOA: 5
+            # Gives the fire aspect enchantment (from 1 to 2)
+            # Set to 0 to disable
+            fire: 2
+            # Gives the knockback enchantment (from 1 to 2)
+            # Set to 0 to disable
+            knockback: 2
+        picks:
+            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Set to 0 to disable
+            sharpness: 5
+            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Set to 0 to disable
+            smite: 5
+            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Set to 0 to disable
+            BOA: 5
+            # Gives the fire aspect enchantment (from 1 to 2)
+            # Set to 0 to disable
+            fire: 2
+            # Gives the knockback enchantment (from 1 to 2)
+            # Set to 0 to disable
+            knockback: 2
+        bows:
+            # Gives the power enchantment (from 1 to 5)
+            # Set to 0 to disable
+            power: 5
+            # Gives the flame enchantment (only 1)
+            # Set to 0 to disable
+            flame: 1
+            # Gives the punch enchantment (from 1 to 2)
+            punch: 2
+#----------------------------------
+# Mob Effects
+#----------------------------------
+potions:
+    # Gives the mobs the strength potion effect (1 to 255)
+    # Set to 0 to disable
+    increase_damage: 1
+    # Gives the mobs the resistance potion effect (1 to 255)
+    # Set to 0 to disable
+    resistance: 2
+    # Gives the mobs the speed potion effect (1 to 255)
+    # Set to 0 to disable
+    speed: 1
+    # Gives the mobs a health boost potion effect (1 to 255)
+    # Set to 0 to disable
+    health: 0
