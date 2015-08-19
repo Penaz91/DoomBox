@@ -3,3 +3,9 @@ Little plugin for Spigot 1.8 that allows players to summon a Pandoras-Style Box,
 
 # In-Game Commands
 * **/summonbox** Summons the box.
+
+# Usage
+* **1** Summon the box (Usually via /summonbox)
+* **2** Prepare to Fight
+* **3** Break the box lid (The carpet on top of the cauldron)
+* **4** Fight the unholy mass of mobs that will invade your world!
