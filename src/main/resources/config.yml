@@ -11,29 +11,41 @@ world:
     z: 0
 #==================================
 # === Basic Mob Settings ===
-# Set a number to zero to disable the mob summoning
 #==================================
-mobs:
-    # Number of Zombies to summon
-    Zombies: 10
-    # Number of Skeletons to summon
-    Skeletons: 10
-    # Number of Zombie Pigmen to summon
-    Pigmen: 10
-    # Number of Ghasts to Summon
-    Ghast: 2
-    # Number of Witches to Summon
-    Witch: 5
-    # Number of Creepers to Summon
-    Creeper: 5
-    # Number of Spiders to Summon
-    Spider: 10
-    # Number of Endermen to Summon
-    Enderman: 2
-    # Number of Blazes to Summon
-    Blaze: 10
-    # Number of Slimes to Summon
-    Slime: 10
+mob_settings:
+    # Enables the mob randomizer, just give the total number of mobs to summon, the other options are ignored
+    # If disabled, the total mobs will be ignored
+    randomizer: true
+    totalmobs: 30
+    # Custom pre-defined mob summoning
+    # Set a number to zero to disable the mob summoning
+    mobs:
+        # Number of Zombies to summon
+        Zombies: 10
+        # Number of Skeletons to summon
+        Skeletons: 10
+        # Number of Zombie Pigmen to summon
+        Pigmen: 10
+        # Number of Ghasts to Summon
+        Ghast: 2
+        # Number of Witches to Summon
+        Witch: 5
+        # Number of Creepers to Summon
+        Creeper: 5
+        # Number of Spiders to Summon
+        Spider: 10
+        # Number of Endermen to Summon
+        Enderman: 2
+        # Number of Blazes to Summon
+        Blaze: 10
+        # Number of Slimes to Summon
+        Slime: 10
+        # Number of Cave Spiders to Summon
+        CaveSpider: 10
+        # Number of Magma Cubes to Summon
+        MagmaCube: 10
+        # Number of Wither Skeletons to Summon
+        WitherSkeleton: 10
 #==================================
 # === Advanced Mob Settings ===
 #==================================
