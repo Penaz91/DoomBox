@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -23,6 +24,7 @@ import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -38,6 +40,7 @@ public class doombox extends JavaPlugin {
 	//--------------------------------------
 	static Location loc=null;
 	static Location carpetloc=null;
+	static doombox instance=null;
 	//-------------------------------------------------------------
 	@Override 
 	public void onEnable() {
@@ -50,6 +53,7 @@ public class doombox extends JavaPlugin {
 			saveResource("plugin.yml", false);
 		}
 		settings=(HashMap<String, Object>) getConfig().getValues(true);
+		instance = this;
 		getLogger().info("DoomBox Loaded Successfully");
 	 }
 	@Override
@@ -75,12 +79,22 @@ public class doombox extends JavaPlugin {
     			sender.sendMessage("You can't use this command in this world");
     		}
     		return true;
+    	}else{
+    		if (cmd.getName().equals("doombox")) {
+    			if (args[0].equals("reload")){
+    				settings=null;
+    				this.reloadConfig();
+    				settings=(HashMap<String, Object>) getConfig().getValues(true);
+    				getLogger().info("DoomBox Settings Reloaded.");
+    				sender.sendMessage("DoomBox has been reloaded");
+    			}
+    			return true;
+    		}
     	}
     	return false;
 	}
 	public static void handleSpawn(){
 		elist=new ArrayList<Entity>();
-		Bukkit.getServer().broadcastMessage(ChatColor.RED+settings.get("messages.open_message").toString());
 		loc.getBlock().setType(Material.AIR);
 		carpetloc.getBlock().setType(Material.AIR);
 		String bool=settings.get("mob_settings.randomizer").toString();
@@ -118,15 +132,20 @@ public class doombox extends JavaPlugin {
 				elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
 				ArrayList<EntityType> Armorable=new ArrayList<EntityType>(Arrays.asList(EntityType.ZOMBIE,EntityType.SKELETON,EntityType.PIG_ZOMBIE));
 				if (Armorable.contains(elist.get(i).getType())){
-					int dice=rnd.nextInt(6);
-					switch (dice){
-						case(0):giveEmptyKit(elist.get(i));break;
-						case(1):giveIronKit(elist.get(i));break;
-						case(2):giveChainKit(elist.get(i));break;
-						case(3):giveLeatherKit(elist.get(i));break;
-						case(4):giveGoldKit(elist.get(i));break;
-						case(5):giveDiamondKit(elist.get(i));break;
-					}	
+					boolean sets=settings.get("armor_settings.sets").toString().equalsIgnoreCase("true");
+					if (sets){
+						int dice=rnd.nextInt(6);
+						switch (dice){
+							case(0):giveEmptyKit(elist.get(i));break;
+							case(1):giveIronKit(elist.get(i));break;
+							case(2):giveChainKit(elist.get(i));break;
+							case(3):giveLeatherKit(elist.get(i));break;
+							case(4):giveGoldKit(elist.get(i));break;
+							case(5):giveDiamondKit(elist.get(i));break;
+						}	
+					}else{
+						giveRandomKit(elist.get(i));
+					}
 				}
 			}
 		}
@@ -233,6 +252,53 @@ public class doombox extends JavaPlugin {
 		AddArmorEnchant(legs);
 		AddArmorEnchant(hat);
 		AddArmorEnchant(boots);
+		ee.setChestplate(chest);
+		ee.setHelmet(hat);
+		ee.setLeggings(legs);
+		ee.setBoots(boots);
+		ee.setItemInHand(hand);
+		givePotionEffects(le);
+	}
+	public static void giveRandomKit(Entity e){
+		LivingEntity le=((LivingEntity) e);
+		EntityEquipment ee=le.getEquipment();
+		ItemStack chest=null;
+		ItemStack legs=null;
+		ItemStack hat=null;
+		ItemStack boots=null;
+		switch (rnd.nextInt(6)){
+		case 0: chest=new ItemStack(Material.DIAMOND_CHESTPLATE,1);AddArmorEnchant(chest);break;
+		case 1: chest=new ItemStack(Material.IRON_CHESTPLATE,1);AddArmorEnchant(chest);break;
+		case 2: chest=new ItemStack(Material.CHAINMAIL_CHESTPLATE,1);AddArmorEnchant(chest);break;
+		case 3: chest=new ItemStack(Material.GOLD_CHESTPLATE,1);AddArmorEnchant(chest);break;
+		case 4: chest=new ItemStack(Material.LEATHER_CHESTPLATE,1);AddArmorEnchant(chest);break;
+		case 5: break;
+		}
+		switch (rnd.nextInt(6)){
+		case 0: legs=new ItemStack(Material.DIAMOND_LEGGINGS,1);AddArmorEnchant(legs);break;
+		case 1: legs=new ItemStack(Material.IRON_LEGGINGS,1);AddArmorEnchant(legs);break;
+		case 2: legs=new ItemStack(Material.CHAINMAIL_LEGGINGS,1);AddArmorEnchant(legs);break;
+		case 3: legs=new ItemStack(Material.GOLD_LEGGINGS,1);AddArmorEnchant(legs);break;
+		case 4: legs=new ItemStack(Material.LEATHER_LEGGINGS,1);AddArmorEnchant(legs);break;
+		case 5: break;
+		}
+		switch (rnd.nextInt(6)){
+		case 0: hat=new ItemStack(Material.DIAMOND_HELMET,1);AddArmorEnchant(hat);break;
+		case 1: hat=new ItemStack(Material.IRON_HELMET,1);AddArmorEnchant(hat);break;
+		case 2: hat=new ItemStack(Material.CHAINMAIL_HELMET,1);AddArmorEnchant(hat);break;
+		case 3: hat=new ItemStack(Material.GOLD_HELMET,1);AddArmorEnchant(hat);break;
+		case 4: hat=new ItemStack(Material.LEATHER_HELMET,1);AddArmorEnchant(hat);break;
+		case 5: break;
+		}
+		switch (rnd.nextInt(6)){
+		case 0: boots=new ItemStack(Material.DIAMOND_BOOTS,1);AddArmorEnchant(boots);break;
+		case 1: boots=new ItemStack(Material.IRON_BOOTS,1);AddArmorEnchant(boots);break;
+		case 2: boots=new ItemStack(Material.CHAINMAIL_BOOTS,1);AddArmorEnchant(boots);break;
+		case 3: boots=new ItemStack(Material.GOLD_BOOTS,1);AddArmorEnchant(boots);break;
+		case 4: boots=new ItemStack(Material.LEATHER_BOOTS,1);AddArmorEnchant(boots);break;
+		case 5: break;
+		}
+		ItemStack hand=giveWeapon(e,rnd.nextInt(4));
 		ee.setChestplate(chest);
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
@@ -530,5 +596,22 @@ public class doombox extends JavaPlugin {
 				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, bl);
 			}
 		}
+	}
+	public static void startSpawn(){
+		Bukkit.getServer().broadcastMessage(ChatColor.RED+settings.get("messages.open_message").toString());
+		final int particles = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(doombox.getInstance(), new Runnable(){
+			public void run(){
+				loc.getWorld().playEffect(loc,Effect.MOBSPAWNER_FLAMES, 5000);
+			}
+		}, 40, 0);
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+				public void run(){
+					Bukkit.getServer().getScheduler().cancelTask(particles);
+					loc.getWorld().createExplosion(loc,0.0F,false);
+					handleSpawn();}
+		},20*5);
+	}
+	private static Plugin getInstance() {
+		return instance;
 	}
 }

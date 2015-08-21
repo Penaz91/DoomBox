@@ -8,7 +8,7 @@ public final class BlockBreakerListener implements Listener{
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
 		if (event.getBlock().getLocation().equals(doombox.carpetloc)){
-			doombox.handleSpawn();
+			doombox.startSpawn();
 		}
 	}
 }

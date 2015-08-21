@@ -10,3 +10,8 @@ commands:
         usage: /summonbox
         permission: doombox.summonbox
         permission-message: You need the doombox.summonbox permission to execute this command
+    doombox:
+        description: Doombox config manager
+        usage: /doombox <command>
+        permission: doombox.configure
+        permission-message: You need the doombox.configure permission to execute this command

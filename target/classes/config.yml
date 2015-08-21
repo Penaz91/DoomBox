@@ -15,10 +15,12 @@ world:
 mob_settings:
     # Enables the mob randomizer, just give the total number of mobs to summon, the other options are ignored
     # If disabled, the total mobs will be ignored
+    # For now only true works
     randomizer: true
     totalmobs: 30
     # Custom pre-defined mob summoning
     # Set a number to zero to disable the mob summoning
+    # !! NOT YET IMPLEMENTED !!
     mobs:
         # Number of Zombies to summon
         Zombies: 10
@@ -55,6 +57,7 @@ mob_settings:
 #----------------------------------
 armor_settings:
     # Enables the randomizer, so that all armors have enchants from 0 to the set number
+    # !! ONLY TRUE IS IMPLEMENTED !!
     randomizer: true
     # Enables sets, so that the mobs will have full gold/diamond/... sets, instead of randomly generated armors
     sets: true
@@ -130,6 +133,7 @@ armor_settings:
 #----------------------------------
 weapon_settings:
     #Enables the randomizer, giving each weapon an enchant between 0 and the set number
+    # !! ONLY TRUE IS IMPLEMENTED !!
     randomizer: true
     weapons:
         swords:
