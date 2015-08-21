@@ -97,18 +97,10 @@ public class doombox extends JavaPlugin {
 		elist=new ArrayList<Entity>();
 		loc.getBlock().setType(Material.AIR);
 		carpetloc.getBlock().setType(Material.AIR);
-		String bool=settings.get("mob_settings.randomizer").toString();
-		boolean randomizer=false;
-		if (bool.equalsIgnoreCase("true")){
-			randomizer=true;
-		}
-		System.out.println(randomizer);
-		System.out.println(bool);
-		System.out.println(settings.get("mob_settings.randomizer").toString());
+		boolean randomizer=settings.get("mob_settings.randomizer").toString().equalsIgnoreCase("true");
 		if (randomizer){
 			int nummobs=Integer.parseInt(settings.get("mob_settings.totalmobs").toString());
-			System.out.println(nummobs);
-			for (int i =0;i<nummobs;i++){
+			for (int i =0;i<=nummobs;i++){
 				switch(rnd.nextInt(13)){
 					case 0: elist.add(loc.getWorld().spawnEntity(loc,EntityType.ZOMBIE));break;
 					case 1: elist.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));break;
@@ -130,22 +122,96 @@ public class doombox extends JavaPlugin {
 					}
 				}
 				elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
-				ArrayList<EntityType> Armorable=new ArrayList<EntityType>(Arrays.asList(EntityType.ZOMBIE,EntityType.SKELETON,EntityType.PIG_ZOMBIE));
-				if (Armorable.contains(elist.get(i).getType())){
-					boolean sets=settings.get("armor_settings.sets").toString().equalsIgnoreCase("true");
-					if (sets){
-						int dice=rnd.nextInt(6);
-						switch (dice){
-							case(0):giveEmptyKit(elist.get(i));break;
-							case(1):giveIronKit(elist.get(i));break;
-							case(2):giveChainKit(elist.get(i));break;
-							case(3):giveLeatherKit(elist.get(i));break;
-							case(4):giveGoldKit(elist.get(i));break;
-							case(5):giveDiamondKit(elist.get(i));break;
-						}	
-					}else{
-						giveRandomKit(elist.get(i));
-					}
+			}
+		}else{
+			int zombies=Integer.parseInt(settings.get("mob_settings.mobs.Zombies").toString());
+			int skeletons=Integer.parseInt(settings.get("mob_settings.mobs.Skeletons").toString());;
+			int pigmen=Integer.parseInt(settings.get("mob_settings.mobs.Pigmen").toString());;
+			int ghasts=Integer.parseInt(settings.get("mob_settings.mobs.Ghasts").toString());;
+			int witches=Integer.parseInt(settings.get("mob_settings.mobs.Witches").toString());;
+			int creepers=Integer.parseInt(settings.get("mob_settings.mobs.Creepers").toString());;
+			int spiders=Integer.parseInt(settings.get("mob_settings.mobs.Spiders").toString());;
+			int endermen=Integer.parseInt(settings.get("mob_settings.mobs.Endermen").toString());;
+			int blazes=Integer.parseInt(settings.get("mob_settings.mobs.Blazes").toString());;
+			int slimes=Integer.parseInt(settings.get("mob_settings.mobs.Slimes").toString());;
+			int cavespiders=Integer.parseInt(settings.get("mob_settings.mobs.CaveSpiders").toString());;
+			int magma_cubes=Integer.parseInt(settings.get("mob_settings.mobs.MagmaCubes").toString());;
+			int wither_skeletons=Integer.parseInt(settings.get("mob_settings.mobs.WitherSkeletons").toString());;
+			//create Zombies
+			for (int i=0;i<zombies;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.ZOMBIE));
+			}
+			//create Skeletons
+			for (int i=0;i<skeletons;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));
+			}
+			//create Pigmen
+			for (int i=0;i<pigmen;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.PIG_ZOMBIE));
+			}
+			//create Ghasts
+			for (int i=0;i<ghasts;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.GHAST));
+			}
+			//create Witches
+			for (int i=0;i<witches;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITCH));
+			}
+			//create Creepers
+			for (int i=0;i<creepers;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.CREEPER));
+			}
+			//create Spider
+			for (int i=0;i<spiders;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.SPIDER));
+			}
+			//create endermen
+			for (int i=0;i<endermen;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.ENDERMAN));
+			}
+			//create blazes
+			for (int i=0;i<blazes;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.BLAZE));
+			}
+			//create Slimes
+			for (int i=0;i<slimes;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.SLIME));
+			}
+			//create CaveSpiders
+			for (int i=0;i<cavespiders;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.CAVE_SPIDER));
+			}
+			//create magma cubes
+			for (int i=0;i<magma_cubes;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.MAGMA_CUBE));
+			}
+			//create wither skeletons
+			ArrayList<Entity> with=new ArrayList<Entity>();
+			for (int i=0;i<wither_skeletons;i++){
+				with.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));
+				Skeleton skelly=(Skeleton) with.get(i);
+				skelly.setSkeletonType(SkeletonType.WITHER);
+			}
+			elist.addAll(with);
+		}
+		//Armor entities and launch them
+		ArrayList<EntityType> Armorable=new ArrayList<EntityType>(Arrays.asList(EntityType.ZOMBIE,EntityType.SKELETON,EntityType.PIG_ZOMBIE));
+		for (int i=0;i<elist.size();i++){
+			elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
+			if (Armorable.contains(elist.get(i).getType())){
+				boolean sets=settings.get("armor_settings.sets").toString().equalsIgnoreCase("true");
+				if (sets){
+					int dice=rnd.nextInt(6);
+					switch (dice){
+						case(0):giveEmptyKit(elist.get(i));break;
+						case(1):giveIronKit(elist.get(i));break;
+						case(2):giveChainKit(elist.get(i));break;
+						case(3):giveLeatherKit(elist.get(i));break;
+						case(4):giveGoldKit(elist.get(i));break;
+						case(5):giveDiamondKit(elist.get(i));break;
+					}	
+				}else{
+					giveRandomKit(elist.get(i));
 				}
 			}
 		}
@@ -479,34 +545,53 @@ public class doombox extends JavaPlugin {
 				}
 			}
 		}
-		if (sharp!=0){
-			int sh=rnd.nextInt(sharp+1);
-			if (sh!=0){
-				weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, sh);
+		boolean random=settings.get("weapon_settings.randomizer").toString().equals("true");
+		if (random){
+			if (sharp!=0){
+				int sh=rnd.nextInt(sharp+1);
+				if (sh!=0){
+					weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, sh);
+				}
 			}
-		}
-		if (smite!=0){
-			int sm=rnd.nextInt(smite+1);
-			if (sm!=0){
-				weapon.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, sm);
+			if (smite!=0){
+				int sm=rnd.nextInt(smite+1);
+				if (sm!=0){
+					weapon.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, sm);
+				}
 			}
-		}
-		if (BOA!=0){
-			int bane=rnd.nextInt(BOA+1);
-			if (bane!=0){
-				weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, bane);
+			if (BOA!=0){
+				int bane=rnd.nextInt(BOA+1);
+				if (bane!=0){
+					weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, bane);
+				}
 			}
-		}
-		if (fire!=0){
-			int f=rnd.nextInt(fire+1);
-			if (f!=0){
-				weapon.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, f);
+			if (fire!=0){
+				int f=rnd.nextInt(fire+1);
+				if (f!=0){
+					weapon.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, f);
+				}
 			}
-		}
-		if (knockback!=0){
-			int kn=rnd.nextInt(knockback+1);
-			if (kn!=0){
-				weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, kn);
+			if (knockback!=0){
+				int kn=rnd.nextInt(knockback+1);
+				if (kn!=0){
+					weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, kn);
+				}
+			}
+		}else{
+			if (sharp!=0){
+				weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, sharp);
+			}
+			if (smite!=0){
+				weapon.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, smite);
+			}
+			if (BOA!=0){
+				weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, BOA);
+			}
+			if (fire!=0){
+				weapon.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, fire);
+			}
+			if (knockback!=0){
+				weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, knockback);
 			}
 		}
 	}
@@ -514,22 +599,35 @@ public class doombox extends JavaPlugin {
 		int power=Integer.parseInt(settings.get("weapon_settings.weapons.bows.power").toString());
 		int flame=Integer.parseInt(settings.get("weapon_settings.weapons.bows.flame").toString());
 		int punch=Integer.parseInt(settings.get("weapon_settings.weapons.bows.punch").toString());
-		if (power!=0){
-			int pwr=rnd.nextInt(power+1);
-			if (pwr!=0){
-				weapon.addEnchantment(Enchantment.ARROW_DAMAGE, pwr);
+		boolean random=settings.get("weapon_settings.randomizer").toString().equals("true");
+		if (random){
+			if (power!=0){
+				int pwr=rnd.nextInt(power+1);
+				if (pwr!=0){
+					weapon.addEnchantment(Enchantment.ARROW_DAMAGE, pwr);
+				}
 			}
-		}
-		if (flame!=0){
-			int flm=rnd.nextInt(flame+1);
-			if (flm!=0){
-				weapon.addEnchantment(Enchantment.ARROW_FIRE, flm);
+			if (flame!=0){
+				int flm=rnd.nextInt(flame+1);
+				if (flm!=0){
+					weapon.addEnchantment(Enchantment.ARROW_FIRE, flm);
+				}
 			}
-		}
-		if (punch!=0){
-			int pnc=rnd.nextInt(punch+1);
-			if (pnc!=0){
-				weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, pnc);
+			if (punch!=0){
+				int pnc=rnd.nextInt(punch+1);
+				if (pnc!=0){
+					weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, pnc);
+				}
+			}
+		}else{
+			if (power!=0){
+				weapon.addEnchantment(Enchantment.ARROW_DAMAGE, power);
+			}
+			if (flame!=0){
+				weapon.addEnchantment(Enchantment.ARROW_FIRE, flame);
+			}
+			if (punch!=0){
+				weapon.addEnchantment(Enchantment.ARROW_KNOCKBACK, punch);
 			}
 		}
 	}
@@ -572,28 +670,44 @@ public class doombox extends JavaPlugin {
 				}
 			}
 		}
-		if (prot!=0){
-			int prt=rnd.nextInt(prot+1);
-			if (prt!=0){
-				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, prt);
+		boolean random=settings.get("armor_settings.randomizer").toString().equalsIgnoreCase("true");
+		if (random){
+			if (prot!=0){
+				int prt=rnd.nextInt(prot+1);
+				if (prt!=0){
+					armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, prt);
+				}
 			}
-		}
-		if (proj!=0){
-			int pr=rnd.nextInt(proj+1);
-			if (pr!=0){
-				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, pr);
+			if (proj!=0){
+				int pr=rnd.nextInt(proj+1);
+				if (pr!=0){
+					armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, pr);
+				}
 			}
-		}
-		if (fire!=0){
-			int f=rnd.nextInt(fire+1);
-			if (f!=0){
-				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, f);
+			if (fire!=0){
+				int f=rnd.nextInt(fire+1);
+				if (f!=0){
+					armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, f);
+				}
 			}
-		}
-		if (blast!=0){
-			int bl=rnd.nextInt(blast+1);
-			if (bl!=0){
-				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, bl);
+			if (blast!=0){
+				int bl=rnd.nextInt(blast+1);
+				if (bl!=0){
+					armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, bl);
+				}
+			}
+		}else{
+			if (prot!=0){
+				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, prot);
+			}
+			if (proj!=0){
+				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, proj);
+			}
+			if (fire!=0){
+				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, fire);
+			}
+			if (blast!=0){
+				armorpiece.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, blast);
 			}
 		}
 	}
