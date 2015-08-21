@@ -235,3 +235,10 @@ messages:
     # Message to broadcast on the kill of all the summoned mobs
     # Leave "" to disable the message
     end_message: "The Dark Forces are retreating! Our reality is safe... For Now..."
+#==================================
+# === Special Settings ===
+#==================================
+general:
+    enabled: true
+    runs: 5
+    message: The End is Nigh!!!

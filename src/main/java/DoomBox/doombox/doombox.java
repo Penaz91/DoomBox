@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -41,6 +42,7 @@ public class doombox extends JavaPlugin {
 	static Location loc=null;
 	static Location carpetloc=null;
 	static doombox instance=null;
+	static int runs=0;
 	//-------------------------------------------------------------
 	@Override 
 	public void onEnable() {
@@ -81,12 +83,16 @@ public class doombox extends JavaPlugin {
     		return true;
     	}else{
     		if (cmd.getName().equals("doombox")) {
-    			if (args[0].equals("reload")){
+    			if (args[0].equalsIgnoreCase("reload")){
     				settings=null;
     				this.reloadConfig();
     				settings=(HashMap<String, Object>) getConfig().getValues(true);
     				getLogger().info("DoomBox Settings Reloaded.");
     				sender.sendMessage("DoomBox has been reloaded");
+    			}else{
+    				if(args[0].equalsIgnoreCase("simulatecorruption")){
+    					boss();
+    				}
     			}
     			return true;
     		}
@@ -95,8 +101,6 @@ public class doombox extends JavaPlugin {
 	}
 	public static void handleSpawn(){
 		elist=new ArrayList<Entity>();
-		loc.getBlock().setType(Material.AIR);
-		carpetloc.getBlock().setType(Material.AIR);
 		boolean randomizer=settings.get("mob_settings.randomizer").toString().equalsIgnoreCase("true");
 		if (randomizer){
 			int nummobs=Integer.parseInt(settings.get("mob_settings.totalmobs").toString());
@@ -219,7 +223,20 @@ public class doombox extends JavaPlugin {
 	public static void handleDeath(){
 		System.out.println("A mob in the list died");
 		if (elist.isEmpty()){
-			Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
+			boolean boss=settings.get("general.enabled").toString().equalsIgnoreCase("true");
+			if (boss){
+				if (runs!=Integer.parseInt(settings.get("general.runs").toString())){
+					Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
+					loc.getBlock().setType(Material.AIR);
+					carpetloc.getBlock().setType(Material.AIR);
+				}else{
+					boss();
+				}
+			}else{
+				Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
+				loc.getBlock().setType(Material.AIR);
+				carpetloc.getBlock().setType(Material.AIR);
+			}
 		}
 	}
 	public static void giveDiamondKit(Entity e){
@@ -713,6 +730,7 @@ public class doombox extends JavaPlugin {
 	}
 	public static void startSpawn(){
 		Bukkit.getServer().broadcastMessage(ChatColor.RED+settings.get("messages.open_message").toString());
+		runs++;
 		final int particles = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(doombox.getInstance(), new Runnable(){
 			public void run(){
 				loc.getWorld().playEffect(loc,Effect.MOBSPAWNER_FLAMES, 5000);
@@ -727,5 +745,87 @@ public class doombox extends JavaPlugin {
 	}
 	private static Plugin getInstance() {
 		return instance;
+	}
+	private static void boss(){
+		final int particles = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(doombox.getInstance(), new Runnable(){
+			public void run(){
+				loc.getWorld().playEffect(loc,Effect.MOBSPAWNER_FLAMES, 5000);
+			}
+		}, 0, 10);
+		Bukkit.getServer().broadcastMessage(settings.get("messages.end_message").toString()+ChatColor.MAGIC+"Text");
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+			public void run(){
+				Bukkit.getServer().broadcastMessage(ChatColor.RED+"Error");
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+					public void run(){
+						Bukkit.getServer().broadcastMessage(ChatColor.RED+"Er"+ChatColor.MAGIC+"r"+ChatColor.RESET+""+ChatColor.RED+"or");
+						Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+							public void run(){
+								Bukkit.getServer().broadcastMessage(ChatColor.RED+"E"+ChatColor.MAGIC+"rr"+ChatColor.RESET+""+ChatColor.RED+"or");
+								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+									public void run(){
+											Bukkit.getServer().broadcastMessage(ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"ER"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"RO"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"RRRRRR"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"RRRRRRR"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text");
+											loc.getWorld().playSound(loc, Sound.WITHER_IDLE, 10, 1);
+											Bukkit.getServer().getScheduler().cancelTask(particles);
+											StartBoss();
+									}},20);
+								}},30);
+							}},40);
+					}},100);
+	}
+	public static void StartBoss(){
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+		public void run(){
+			loc.getWorld().createExplosion(loc,0.0F,false);
+			//more
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+				public void run(){
+					loc.getWorld().strikeLightning(loc);
+					//more
+					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+						public void run(){
+							loc.getWorld().strikeLightning(loc);
+							loc.getWorld().strikeLightning(loc);
+							//more
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
+								public void run(){
+									runs=0;
+									loc.getWorld().strikeLightning(loc);
+									loc.getWorld().strikeLightning(loc);
+									loc.getWorld().strikeLightning(loc);
+									loc.getWorld().createExplosion(loc,0.0F,false);
+									Bukkit.getServer().broadcastMessage(ChatColor.GOLD+"General of the dark Force:"+ChatColor.WHITE+settings.get("general.message").toString());
+									LivingEntity boss=(LivingEntity) loc.getWorld().spawnEntity(loc,EntityType.SKELETON);
+									loc.getBlock().setType(Material.AIR);
+									carpetloc.getBlock().setType(Material.AIR);
+									Skeleton skelly=(Skeleton) boss;
+									skelly.setSkeletonType(SkeletonType.WITHER);
+									boss.setCustomName("General of the Dark Force");
+									boss.setMaxHealth(4000.0);
+									boss.setHealth(boss.getMaxHealth());
+									boss.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,999999,3));
+									boss.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,999999,3));
+									boss.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,999999,3));
+									EntityEquipment ee=boss.getEquipment();
+									ItemStack chest=new ItemStack(Material.DIAMOND_CHESTPLATE,1);
+									ItemStack legs=new ItemStack(Material.DIAMOND_LEGGINGS,1);
+									ItemStack hat=new ItemStack(Material.DIAMOND_HELMET,1);
+									ItemStack boots=new ItemStack(Material.DIAMOND_BOOTS,1);
+									chest.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
+									legs.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
+									hat.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
+									boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
+									ee.setBoots(boots);
+									ee.setLeggings(legs);
+									ee.setChestplate(chest);
+									ee.setHelmet(hat);
+									ItemStack wp=new ItemStack(Material.DIAMOND_AXE,1);
+									wp.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
+									ee.setItemInHand(wp);
+									//more
+								}},20);
+							}},30);
+						}},40);
+				}},40);		
 	}
 }
