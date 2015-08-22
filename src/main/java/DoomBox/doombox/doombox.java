@@ -16,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -48,6 +49,7 @@ public class doombox extends JavaPlugin {
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(new BlockBreakerListener(), this);
 		getServer().getPluginManager().registerEvents(new MobDeathListener(), this);
+		getServer().getPluginManager().registerEvents(new BossHitListener(), this);
 		File f = getDataFolder();
 		if (!f.exists()){
 			f.mkdir();
@@ -89,10 +91,6 @@ public class doombox extends JavaPlugin {
     				settings=(HashMap<String, Object>) getConfig().getValues(true);
     				getLogger().info("DoomBox Settings Reloaded.");
     				sender.sendMessage("DoomBox has been reloaded");
-    			}else{
-    				if(args[0].equalsIgnoreCase("simulatecorruption")){
-    					boss();
-    				}
     			}
     			return true;
     		}
@@ -104,7 +102,7 @@ public class doombox extends JavaPlugin {
 		boolean randomizer=settings.get("mob_settings.randomizer").toString().equalsIgnoreCase("true");
 		if (randomizer){
 			int nummobs=Integer.parseInt(settings.get("mob_settings.totalmobs").toString());
-			for (int i =0;i<=nummobs;i++){
+			for (int i =0;i<nummobs;i++){
 				switch(rnd.nextInt(13)){
 					case 0: elist.add(loc.getWorld().spawnEntity(loc,EntityType.ZOMBIE));break;
 					case 1: elist.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));break;
@@ -223,9 +221,9 @@ public class doombox extends JavaPlugin {
 	public static void handleDeath(){
 		System.out.println("A mob in the list died");
 		if (elist.isEmpty()){
-			boolean boss=settings.get("general.enabled").toString().equalsIgnoreCase("true");
+			boolean boss=settings.get("boss.enabled").toString().equalsIgnoreCase("true");
 			if (boss){
-				if (runs!=Integer.parseInt(settings.get("general.runs").toString())){
+				if (runs!=Integer.parseInt(settings.get("boss.runs").toString())){
 					Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
 					loc.getBlock().setType(Material.AIR);
 					carpetloc.getBlock().setType(Material.AIR);
@@ -752,19 +750,19 @@ public class doombox extends JavaPlugin {
 				loc.getWorld().playEffect(loc,Effect.MOBSPAWNER_FLAMES, 5000);
 			}
 		}, 0, 10);
-		Bukkit.getServer().broadcastMessage(settings.get("messages.end_message").toString()+ChatColor.MAGIC+"Text");
+		Bukkit.getServer().broadcastMessage(parseFormat(settings.get("boss.messages.corrupted_end_message").toString()));
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
 			public void run(){
-				Bukkit.getServer().broadcastMessage(ChatColor.RED+"Error");
+				Bukkit.getServer().broadcastMessage(parseFormat(settings.get("boss.messages.corrupted_message1").toString()));
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
 					public void run(){
-						Bukkit.getServer().broadcastMessage(ChatColor.RED+"Er"+ChatColor.MAGIC+"r"+ChatColor.RESET+""+ChatColor.RED+"or");
+						Bukkit.getServer().broadcastMessage(parseFormat(settings.get("boss.messages.corrupted_message2").toString()));
 						Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
 							public void run(){
-								Bukkit.getServer().broadcastMessage(ChatColor.RED+"E"+ChatColor.MAGIC+"rr"+ChatColor.RESET+""+ChatColor.RED+"or");
+								Bukkit.getServer().broadcastMessage(parseFormat(settings.get("boss.messages.corrupted_message3").toString()));
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
 									public void run(){
-											Bukkit.getServer().broadcastMessage(ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"ER"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"RO"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"RRRRRR"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text"+ChatColor.RESET+ChatColor.RED+"RRRRRRR"+ChatColor.GOLD+""+ChatColor.MAGIC+"Text");
+										Bukkit.getServer().broadcastMessage(parseFormat(settings.get("boss.messages.corrupted_message4").toString()));
 											loc.getWorld().playSound(loc, Sound.WITHER_IDLE, 10, 1);
 											Bukkit.getServer().getScheduler().cancelTask(particles);
 											StartBoss();
@@ -794,38 +792,124 @@ public class doombox extends JavaPlugin {
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().createExplosion(loc,0.0F,false);
-									Bukkit.getServer().broadcastMessage(ChatColor.GOLD+"General of the dark Force:"+ChatColor.WHITE+settings.get("general.message").toString());
+									Bukkit.getServer().broadcastMessage(ChatColor.GOLD+settings.get("boss.name").toString()+": "+parseFormat(settings.get("boss.messages.boss_message").toString()));
 									LivingEntity boss=(LivingEntity) loc.getWorld().spawnEntity(loc,EntityType.SKELETON);
 									loc.getBlock().setType(Material.AIR);
 									carpetloc.getBlock().setType(Material.AIR);
 									Skeleton skelly=(Skeleton) boss;
 									skelly.setSkeletonType(SkeletonType.WITHER);
-									boss.setCustomName("General of the Dark Force");
-									boss.setMaxHealth(4000.0);
+									boss.setCustomName(settings.get("boss.name").toString());
+									boss.setMaxHealth(Integer.parseInt(settings.get("boss.health").toString()));
 									boss.setHealth(boss.getMaxHealth());
-									boss.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,999999,3));
-									boss.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,999999,3));
-									boss.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,999999,3));
+									int str=Integer.parseInt(settings.get("boss.effects.increase_damage").toString());
+									int res=Integer.parseInt(settings.get("boss.effects.resistance").toString());
+									int spd=Integer.parseInt(settings.get("boss.effects.speed").toString());
+									if (str!=0){
+										boss.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,999999,str));
+									}
+									if (res!=0){
+										boss.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,999999,res));
+									}
+									if (spd!=0){
+										boss.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,999999,spd));	
+									}
 									EntityEquipment ee=boss.getEquipment();
 									ItemStack chest=new ItemStack(Material.DIAMOND_CHESTPLATE,1);
 									ItemStack legs=new ItemStack(Material.DIAMOND_LEGGINGS,1);
 									ItemStack hat=new ItemStack(Material.DIAMOND_HELMET,1);
 									ItemStack boots=new ItemStack(Material.DIAMOND_BOOTS,1);
-									chest.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-									legs.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-									hat.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
-									boots.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 6);
+									ArrayList<ItemStack> gear=new ArrayList<ItemStack>();
+									gear.add(chest);
+									gear.add(legs);
+									gear.add(hat);
+									gear.add(boots);
+									for (ItemStack item: gear){
+										int prot=Integer.parseInt(settings.get("boss.armor.protection_all").toString());
+										if (prot!=0){
+											item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, prot);
+										}
+										int proj=Integer.parseInt(settings.get("boss.armor.protection_projectile").toString());
+										if (proj!=0){
+											item.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, proj);
+										}
+										int fire=Integer.parseInt(settings.get("boss.armor.protection_fire").toString());
+										if (fire!=0){
+											item.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, fire);
+										}
+										int blast=Integer.parseInt(settings.get("boss.armor.protection_explosions").toString());
+										if (blast!=0){
+											item.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, blast);
+										}
+									}
 									ee.setBoots(boots);
 									ee.setLeggings(legs);
 									ee.setChestplate(chest);
 									ee.setHelmet(hat);
-									ItemStack wp=new ItemStack(Material.DIAMOND_AXE,1);
-									wp.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
-									ee.setItemInHand(wp);
+									ItemStack weapon=new ItemStack(Material.DIAMOND_AXE,1);
+									int sharp=Integer.parseInt(settings.get("boss.weapon.sharpness").toString());
+									int smite=Integer.parseInt(settings.get("boss.weapon.smite").toString());;
+									int BOA=Integer.parseInt(settings.get("boss.weapon.BOA").toString());;
+									int fire=Integer.parseInt(settings.get("boss.weapon.fire").toString());;
+									int knockback=Integer.parseInt(settings.get("boss.weapon.knockback").toString());;
+									if (sharp!=0){
+										weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, sharp);
+									}
+									if (smite!=0){
+										weapon.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, smite);
+									}
+									if (BOA!=0){
+										weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, BOA);
+									}
+									if (fire!=0){
+										weapon.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, fire);
+									}
+									if (knockback!=0){
+										weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, knockback);
+									}
+									ee.setItemInHand(weapon);
 									//more
 								}},20);
 							}},30);
 						}},40);
 				}},40);		
+	}
+	public static String parseFormat(String newline){
+		newline = newline.replaceAll("&0", ChatColor.BLACK + "");
+        newline = newline.replaceAll("&1", ChatColor.DARK_BLUE + "");
+        newline = newline.replaceAll("&2", ChatColor.DARK_GREEN + "");
+        newline = newline.replaceAll("&3", ChatColor.DARK_AQUA + "");
+        newline = newline.replaceAll("&4", ChatColor.DARK_RED + "");
+        newline = newline.replaceAll("&5", ChatColor.DARK_PURPLE + "");
+        newline = newline.replaceAll("&6", ChatColor.GOLD + "");
+        newline = newline.replaceAll("&7", ChatColor.GRAY + "");
+        newline = newline.replaceAll("&8", ChatColor.DARK_GRAY+ "");
+        newline = newline.replaceAll("&9", ChatColor.BLUE + "");
+        newline = newline.replaceAll("&a", ChatColor.GREEN + "");
+        newline = newline.replaceAll("&b", ChatColor.AQUA + "");
+        newline = newline.replaceAll("&c", ChatColor.RED + "");
+        newline = newline.replaceAll("&d", ChatColor.LIGHT_PURPLE + "");
+        newline = newline.replaceAll("&e", ChatColor.YELLOW + "");
+        newline = newline.replaceAll("&f", ChatColor.WHITE + "");
+        newline = newline.replaceAll("&k", ChatColor.MAGIC + "");
+        newline = newline.replaceAll("&l", ChatColor.BOLD + "");
+        newline = newline.replaceAll("&o", ChatColor.ITALIC + "");
+        newline = newline.replaceAll("&n", ChatColor.UNDERLINE + "");
+        newline = newline.replaceAll("&m", ChatColor.STRIKETHROUGH + "");
+        newline = newline.replaceAll("&r", ChatColor.RESET + "");
+        return newline;
+	}
+	public static void BossPort(Entity boss, Entity Damager){
+		if (settings.get("boss.anti-knockback").toString().equalsIgnoreCase("true")){
+			if (rnd.nextInt(Integer.parseInt(settings.get("boss.chance").toString()))+1==1){
+				if (Damager.getType()==EntityType.ARROW){
+					Arrow arrow=(Arrow) Damager;
+					if (arrow.getShooter() instanceof Player){
+						Player source=(Player) arrow.getShooter();
+						source.teleport(boss);
+					}
+				}
+				boss.teleport(Damager);
+			}
+		}
 	}
 }

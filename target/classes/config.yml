@@ -134,77 +134,77 @@ weapon_settings:
     randomizer: true
     weapons:
         swords:
-            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Gives the weapon the sharpness enchantment 
             # Set to 0 to disable
             sharpness: 5
-            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Gives the weapon the smite enchantment 
             # Set to 0 to disable
             smite: 5
-            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Gives the bane of arthropods enchantment 
             # Set to 0 to disable
             BOA: 5
-            # Gives the fire aspect enchantment (from 1 to 2)
+            # Gives the fire aspect enchantment 
             # Set to 0 to disable
             fire: 2
-            # Gives the knockback enchantment (from 1 to 2)
+            # Gives the knockback enchantment 
             # Set to 0 to disable
             knockback: 2
         axes:
-            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Gives the weapon the sharpness enchantment 
             # Set to 0 to disable
             sharpness: 5
-            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Gives the weapon the smite enchantment 
             # Set to 0 to disable
             smite: 5
-            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Gives the bane of arthropods enchantment 
             # Set to 0 to disable
             BOA: 5
-            # Gives the fire aspect enchantment (from 1 to 2)
+            # Gives the fire aspect enchantment 
             # Set to 0 to disable
             fire: 2
-            # Gives the knockback enchantment (from 1 to 2)
+            # Gives the knockback enchantment 
             # Set to 0 to disable
             knockback: 2
         hoes:
-            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Gives the weapon the sharpness enchantment 
             # Set to 0 to disable
             sharpness: 5
-            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Gives the weapon the smite enchantment 
             # Set to 0 to disable
             smite: 5
-            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Gives the bane of arthropods enchantment 
             # Set to 0 to disable
             BOA: 5
-            # Gives the fire aspect enchantment (from 1 to 2)
+            # Gives the fire aspect enchantment 
             # Set to 0 to disable
             fire: 2
-            # Gives the knockback enchantment (from 1 to 2)
+            # Gives the knockback enchantment 
             # Set to 0 to disable
             knockback: 2
         picks:
-            # Gives the weapon the sharpness enchantment (from 1 to 5)
+            # Gives the weapon the sharpness enchantment 
             # Set to 0 to disable
             sharpness: 5
-            # Gives the weapon the smite enchantment (from 1 to 5)
+            # Gives the weapon the smite enchantment 
             # Set to 0 to disable
             smite: 5
-            # Gives the bane of arthropods enchantment (from 1 to 5)
+            # Gives the bane of arthropods enchantment 
             # Set to 0 to disable
             BOA: 5
-            # Gives the fire aspect enchantment (from 1 to 2)
+            # Gives the fire aspect enchantment 
             # Set to 0 to disable
             fire: 2
-            # Gives the knockback enchantment (from 1 to 2)
+            # Gives the knockback enchantment 
             # Set to 0 to disable
             knockback: 2
         bows:
-            # Gives the power enchantment (from 1 to 5)
+            # Gives the power enchantment 
             # Set to 0 to disable
             power: 5
-            # Gives the flame enchantment (only 1)
+            # Gives the flame enchantment 
             # Set to 0 to disable
             flame: 1
-            # Gives the punch enchantment (from 1 to 2)
+            # Gives the punch enchantment 
             punch: 2
 #----------------------------------
 # Mob Effects
@@ -236,9 +236,58 @@ messages:
     # Leave "" to disable the message
     end_message: "The Dark Forces are retreating! Our reality is safe... For Now..."
 #==================================
-# === Special Settings ===
+# === Boss settings ===
 #==================================
-general:
+boss:
     enabled: true
     runs: 5
-    message: The End is Nigh!!!
+    name: "General of the Dark Force"
+    health: 4000
+    messages:
+        corrupted_end_message: "The Dark Forces are retreating! Our reality is safe... For Now...&ktext"
+        corrupted_message1: "&cError"
+        corrupted_message2: "&cEr&kr&r&cror"
+        corrupted_message3: "&cEr&krr&r&cor"
+        corrupted_message4: "&ktext&r&cE&ktext&r&cR&ktext&r&cR&ktext&r&cO&ktext&r&cR&ktext"
+        boss_message: "&cThe End is Nigh!!!"
+    effects:
+        # Gives the mob the strength potion effect (1 to 255)
+        # Set to 0 to disable
+        increase_damage: 3
+        # Gives the mob the resistance potion effect (1 to 255)
+        # Set to 0 to disable
+        resistance: 3
+        # Gives the mob the speed potion effect (1 to 255)
+        # Set to 0 to disable
+        speed: 3
+    anti-knockback: true
+    chance: 10
+    weapon:
+        # Gives the weapon the sharpness enchantment
+        # Set to 0 to disable
+        sharpness: 10
+        # Gives the weapon the smite enchantment
+        # Set to 0 to disable
+        smite: 0
+        # Gives the bane of arthropods enchantment
+        # Set to 0 to disable
+        BOA: 0
+        # Gives the fire aspect enchantment
+        # Set to 0 to disable
+        fire: 0
+        # Gives the knockback enchantment
+        # Set to 0 to disable
+        knockback: 0
+    armor:
+        # Gives the level of the protection enchantment (from 1 to 4)
+        # Set to 0 to disable
+        protection_all: 6
+        # Gives the level of projectile protection enchantment (from 1 to 4)
+        # Set to 0 to disable
+        protection_projectile: 0
+        # Gives the level of the fire protection enchantment (from 1 to 4)
+        # Set to 0 to disable
+        protection_fire: 0
+        # Gives the level of the blast protection enchantment (from 1 to 4)
+        # Set to 0 to disable
+        protection_explosions: 0
