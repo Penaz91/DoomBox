@@ -250,6 +250,7 @@ boss:
         corrupted_message3: "&cEr&krr&r&cor"
         corrupted_message4: "&ktext&r&cE&ktext&r&cR&ktext&r&cR&ktext&r&cO&ktext&r&cR&ktext"
         boss_message: "&cThe End is Nigh!!!"
+        end_message: "&aThe General of the Dark Force has been defeated! Congratulations!"
     effects:
         # Gives the mob the strength potion effect (1 to 255)
         # Set to 0 to disable

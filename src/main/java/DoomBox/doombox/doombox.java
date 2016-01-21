@@ -74,9 +74,7 @@ public class doombox extends JavaPlugin {
     				sender.sendMessage("You can't use this command in this world");
     			}else{
     				loc = new Location(p.getWorld(),Integer.parseInt(settings.get("world.x").toString()),Integer.parseInt(settings.get("world.y").toString()),Integer.parseInt(settings.get("world.z").toString()));
-    				loc.getBlock().setType(Material.CAULDRON);
-    				carpetloc = new Location(p.getWorld(),Integer.parseInt(settings.get("world.x").toString()),Integer.parseInt(settings.get("world.y").toString())+1,Integer.parseInt(settings.get("world.z").toString()));
-    				carpetloc.getBlock().setType(Material.CARPET);
+    				loc.getBlock().setType(Material.CHEST);
     				this.getServer().broadcastMessage(ChatColor.GOLD+settings.get("messages.summon_message").toString());
     			}
     		}else{
@@ -223,7 +221,7 @@ public class doombox extends JavaPlugin {
 		if (elist.isEmpty()){
 			boolean boss=settings.get("boss.enabled").toString().equalsIgnoreCase("true");
 			if (boss){
-				if (runs!=Integer.parseInt(settings.get("boss.runs").toString())){
+				if (runs<Integer.parseInt(settings.get("boss.runs").toString())){
 					Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
 					loc.getBlock().setType(Material.AIR);
 					carpetloc.getBlock().setType(Material.AIR);
