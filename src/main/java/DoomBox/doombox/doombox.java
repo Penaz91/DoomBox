@@ -44,6 +44,7 @@ public class doombox extends JavaPlugin {
 	static Location carpetloc=null;
 	static doombox instance=null;
 	static int runs=0;
+	static boolean triggered = false;
 	//-------------------------------------------------------------
 	@Override 
 	public void onEnable() {
@@ -75,6 +76,7 @@ public class doombox extends JavaPlugin {
     			}else{
     				loc = new Location(p.getWorld(),Integer.parseInt(settings.get("world.x").toString()),Integer.parseInt(settings.get("world.y").toString()),Integer.parseInt(settings.get("world.z").toString()));
     				loc.getBlock().setType(Material.CHEST);
+    				triggered = false;
     				this.getServer().broadcastMessage(ChatColor.GOLD+settings.get("messages.summon_message").toString());
     			}
     		}else{
@@ -83,12 +85,21 @@ public class doombox extends JavaPlugin {
     		return true;
     	}else{
     		if (cmd.getName().equals("doombox")) {
-    			if (args[0].equalsIgnoreCase("reload")){
+    			if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("doombox.reload")){
     				settings=null;
     				this.reloadConfig();
     				settings=(HashMap<String, Object>) getConfig().getValues(true);
     				getLogger().info("DoomBox Settings Reloaded.");
     				sender.sendMessage("DoomBox has been reloaded");
+    			}else{
+    				if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("version")){
+    					sender.sendMessage("DoomBox");
+    					sender.sendMessage("Proudly brought to you by: Penaz");
+    					sender.sendMessage("--------------------------------------");
+    					sender.sendMessage("This plugin is Free (as in freedom) software,");
+    					sender.sendMessage("feel free to fork the plugin and edit it, as long as");
+    					sender.sendMessage("you quote its original author.");
+    				}
     			}
     			return true;
     		}
@@ -736,6 +747,7 @@ public class doombox extends JavaPlugin {
 				public void run(){
 					Bukkit.getServer().getScheduler().cancelTask(particles);
 					loc.getWorld().createExplosion(loc,0.0F,false);
+					loc.getBlock().setType(Material.AIR);
 					handleSpawn();}
 		},20*5);
 	}
