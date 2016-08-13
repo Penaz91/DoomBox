@@ -85,21 +85,30 @@ public class doombox extends JavaPlugin {
     		return true;
     	}else{
     		if (cmd.getName().equals("doombox")) {
-    			if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("doombox.reload")){
-    				settings=null;
-    				this.reloadConfig();
-    				settings=(HashMap<String, Object>) getConfig().getValues(true);
-    				getLogger().info("DoomBox Settings Reloaded.");
-    				sender.sendMessage("DoomBox has been reloaded");
+    			if (args.length != 0){
+	    			if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("doombox.reload")){
+	    				settings=null;
+	    				this.reloadConfig();
+	    				settings=(HashMap<String, Object>) getConfig().getValues(true);
+	    				getLogger().info("DoomBox Settings Reloaded.");
+	    				sender.sendMessage("DoomBox has been reloaded");
+	    			}else{
+	    				if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("version")){
+	    					sender.sendMessage("DoomBox");
+	    					sender.sendMessage("Proudly brought to you by: Penaz");
+	    					sender.sendMessage("--------------------------------------");
+	    					sender.sendMessage("This plugin is Free (as in freedom) software,");
+	    					sender.sendMessage("feel free to fork the plugin and edit it, as long as");
+	    					sender.sendMessage("you quote its original author.");
+	    				}
+	    			}
     			}else{
-    				if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("version")){
-    					sender.sendMessage("DoomBox");
-    					sender.sendMessage("Proudly brought to you by: Penaz");
-    					sender.sendMessage("--------------------------------------");
-    					sender.sendMessage("This plugin is Free (as in freedom) software,");
-    					sender.sendMessage("feel free to fork the plugin and edit it, as long as");
-    					sender.sendMessage("you quote its original author.");
-    				}
+    				sender.sendMessage("DoomBox");
+					sender.sendMessage("Proudly brought to you by: Penaz");
+					sender.sendMessage("--------------------------------------");
+					sender.sendMessage("This plugin is Free (as in freedom) software,");
+					sender.sendMessage("feel free to fork the plugin and edit it, as long as");
+					sender.sendMessage("you quote its original author.");
     			}
     			return true;
     		}
@@ -773,7 +782,7 @@ public class doombox extends JavaPlugin {
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
 									public void run(){
 										Bukkit.getServer().broadcastMessage(parseFormat(settings.get("boss.messages.corrupted_message4").toString()));
-											loc.getWorld().playSound(loc, Sound.WITHER_IDLE, 10, 1);
+											loc.getWorld().playSound(loc, Sound.ENTITY_WITHER_AMBIENT, 10, 1);
 											Bukkit.getServer().getScheduler().cancelTask(particles);
 											StartBoss();
 									}},20);
