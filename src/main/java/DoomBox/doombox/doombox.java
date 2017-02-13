@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -13,6 +12,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -21,8 +22,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -76,6 +75,7 @@ public class doombox extends JavaPlugin {
     			}else{
     				loc = new Location(p.getWorld(),Integer.parseInt(settings.get("world.x").toString()),Integer.parseInt(settings.get("world.y").toString()),Integer.parseInt(settings.get("world.z").toString()));
     				loc.getBlock().setType(Material.CHEST);
+    				loc.getWorld().strikeLightning(loc);
     				triggered = false;
     				this.getServer().broadcastMessage(ChatColor.GOLD+settings.get("messages.summon_message").toString());
     			}
@@ -134,12 +134,7 @@ public class doombox extends JavaPlugin {
 					case 9: elist.add(loc.getWorld().spawnEntity(loc,EntityType.SLIME));break;
 					case 10: elist.add(loc.getWorld().spawnEntity(loc,EntityType.CAVE_SPIDER));break;
 					case 11: elist.add(loc.getWorld().spawnEntity(loc,EntityType.MAGMA_CUBE));break;
-					case 12: {
-						elist.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));
-						Skeleton skelly=(Skeleton) elist.get(i);
-						skelly.setSkeletonType(SkeletonType.WITHER);
-						break;
-					}
+					case 12: elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON));break;
 				}
 				elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
 			}
@@ -208,9 +203,7 @@ public class doombox extends JavaPlugin {
 			//create wither skeletons
 			ArrayList<Entity> with=new ArrayList<Entity>();
 			for (int i=0;i<wither_skeletons;i++){
-				with.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));
-				Skeleton skelly=(Skeleton) with.get(i);
-				skelly.setSkeletonType(SkeletonType.WITHER);
+				with.add(loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON));
 			}
 			elist.addAll(with);
 		}
@@ -271,7 +264,7 @@ public class doombox extends JavaPlugin {
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
 		ee.setBoots(boots);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		givePotionEffects(le);
 	}
 	public static void giveChainKit(Entity e){
@@ -290,14 +283,14 @@ public class doombox extends JavaPlugin {
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
 		ee.setBoots(boots);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		givePotionEffects(le);
 	}
 	public static void giveEmptyKit(Entity e){
 		LivingEntity le=((LivingEntity) e);
 		EntityEquipment ee=le.getEquipment();
 		ItemStack hand=giveWeapon(e,0);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		le.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,5000,3));
 		givePotionEffects(le);
 	}
@@ -317,7 +310,7 @@ public class doombox extends JavaPlugin {
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
 		ee.setBoots(boots);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		givePotionEffects(le);
 	}
 	public static void giveLeatherKit(Entity e){
@@ -336,7 +329,7 @@ public class doombox extends JavaPlugin {
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
 		ee.setBoots(boots);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		givePotionEffects(le);
 	}
 	public static void giveGoldKit(Entity e){
@@ -355,7 +348,7 @@ public class doombox extends JavaPlugin {
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
 		ee.setBoots(boots);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		givePotionEffects(le);
 	}
 	public static void giveRandomKit(Entity e){
@@ -402,7 +395,7 @@ public class doombox extends JavaPlugin {
 		ee.setHelmet(hat);
 		ee.setLeggings(legs);
 		ee.setBoots(boots);
-		ee.setItemInHand(hand);
+		ee.setItemInMainHand(hand);
 		givePotionEffects(le);
 	}
 	public static void givePotionEffects (LivingEntity le){
@@ -432,7 +425,8 @@ public class doombox extends JavaPlugin {
 			int hlt=rnd.nextInt(health+1);
 			if (hlt!=0){
 				le.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST,999999,hlt));
-				le.setHealth(le.getMaxHealth());
+				AttributeInstance hp = le.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+				le.setHealth(hp.getBaseValue());
 			}
 		}
 	}
@@ -811,81 +805,88 @@ public class doombox extends JavaPlugin {
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().createExplosion(loc,0.0F,false);
-									Bukkit.getServer().broadcastMessage(ChatColor.GOLD+settings.get("boss.name").toString()+": "+parseFormat(settings.get("boss.messages.boss_message").toString()));
-									LivingEntity boss=(LivingEntity) loc.getWorld().spawnEntity(loc,EntityType.SKELETON);
-									loc.getBlock().setType(Material.AIR);
-									carpetloc.getBlock().setType(Material.AIR);
-									Skeleton skelly=(Skeleton) boss;
-									skelly.setSkeletonType(SkeletonType.WITHER);
-									boss.setCustomName(settings.get("boss.name").toString());
-									boss.setMaxHealth(Integer.parseInt(settings.get("boss.health").toString()));
-									boss.setHealth(boss.getMaxHealth());
-									int str=Integer.parseInt(settings.get("boss.effects.increase_damage").toString());
-									int res=Integer.parseInt(settings.get("boss.effects.resistance").toString());
-									int spd=Integer.parseInt(settings.get("boss.effects.speed").toString());
-									if (str!=0){
-										boss.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,999999,str));
+									if (settings.get("boss.mythicmobs").toString().equalsIgnoreCase("true")){
+										Bukkit.getLogger().info("Entro Mythic");
+										Bukkit.getLogger().info("Comando: /" + "mm mobs spawn "+ settings.get("boss.mythicmobname").toString() +" 1 "+loc.getWorld().getName()+","+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
+										Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mm mobs spawn "+ settings.get("boss.mythicmobname").toString() +" 1 "+loc.getWorld().getName()+","+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
 									}
-									if (res!=0){
-										boss.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,999999,res));
-									}
-									if (spd!=0){
-										boss.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,999999,spd));	
-									}
-									EntityEquipment ee=boss.getEquipment();
-									ItemStack chest=new ItemStack(Material.DIAMOND_CHESTPLATE,1);
-									ItemStack legs=new ItemStack(Material.DIAMOND_LEGGINGS,1);
-									ItemStack hat=new ItemStack(Material.DIAMOND_HELMET,1);
-									ItemStack boots=new ItemStack(Material.DIAMOND_BOOTS,1);
-									ArrayList<ItemStack> gear=new ArrayList<ItemStack>();
-									gear.add(chest);
-									gear.add(legs);
-									gear.add(hat);
-									gear.add(boots);
-									for (ItemStack item: gear){
-										int prot=Integer.parseInt(settings.get("boss.armor.protection_all").toString());
-										if (prot!=0){
-											item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, prot);
+									else{
+										Bukkit.getServer().broadcastMessage(ChatColor.GOLD+settings.get("boss.name").toString()+": "+parseFormat(settings.get("boss.messages.boss_message").toString()));
+										LivingEntity boss=(LivingEntity) loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON);
+										loc.getBlock().setType(Material.AIR);
+										//carpetloc.getBlock().setType(Material.AIR);
+										boss.setCustomName(settings.get("boss.name").toString());
+										AttributeInstance hp = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+										hp.setBaseValue(Integer.parseInt(settings.get("boss.health").toString()));
+										/*boss.setMaxHealth(Integer.parseInt(settings.get("boss.health").toString()));**/
+										boss.setHealth(hp.getBaseValue());
+										int str=Integer.parseInt(settings.get("boss.effects.increase_damage").toString());
+										int res=Integer.parseInt(settings.get("boss.effects.resistance").toString());
+										int spd=Integer.parseInt(settings.get("boss.effects.speed").toString());
+										if (str!=0){
+											boss.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,999999,str));
 										}
-										int proj=Integer.parseInt(settings.get("boss.armor.protection_projectile").toString());
-										if (proj!=0){
-											item.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, proj);
+										if (res!=0){
+											boss.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,999999,res));
 										}
-										int fire=Integer.parseInt(settings.get("boss.armor.protection_fire").toString());
+										if (spd!=0){
+											boss.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,999999,spd));	
+										}
+										EntityEquipment ee=boss.getEquipment();
+										ItemStack chest=new ItemStack(Material.DIAMOND_CHESTPLATE,1);
+										ItemStack legs=new ItemStack(Material.DIAMOND_LEGGINGS,1);
+										ItemStack hat=new ItemStack(Material.DIAMOND_HELMET,1);
+										ItemStack boots=new ItemStack(Material.DIAMOND_BOOTS,1);
+										ArrayList<ItemStack> gear=new ArrayList<ItemStack>();
+										gear.add(chest);
+										gear.add(legs);
+										gear.add(hat);
+										gear.add(boots);
+										for (ItemStack item: gear){
+											int prot=Integer.parseInt(settings.get("boss.armor.protection_all").toString());
+											if (prot!=0){
+												item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, prot);
+											}
+											int proj=Integer.parseInt(settings.get("boss.armor.protection_projectile").toString());
+											if (proj!=0){
+												item.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, proj);
+											}
+											int fire=Integer.parseInt(settings.get("boss.armor.protection_fire").toString());
+											if (fire!=0){
+												item.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, fire);
+											}
+											int blast=Integer.parseInt(settings.get("boss.armor.protection_explosions").toString());
+											if (blast!=0){
+												item.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, blast);
+											}
+										}
+										ee.setBoots(boots);
+										ee.setLeggings(legs);
+										ee.setChestplate(chest);
+										ee.setHelmet(hat);
+										ItemStack weapon=new ItemStack(Material.DIAMOND_AXE,1);
+										int sharp=Integer.parseInt(settings.get("boss.weapon.sharpness").toString());
+										int smite=Integer.parseInt(settings.get("boss.weapon.smite").toString());;
+										int BOA=Integer.parseInt(settings.get("boss.weapon.BOA").toString());;
+										int fire=Integer.parseInt(settings.get("boss.weapon.fire").toString());;
+										int knockback=Integer.parseInt(settings.get("boss.weapon.knockback").toString());;
+										if (sharp!=0){
+											weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, sharp);
+										}
+										if (smite!=0){
+											weapon.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, smite);
+										}
+										if (BOA!=0){
+											weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, BOA);
+										}
 										if (fire!=0){
-											item.addUnsafeEnchantment(Enchantment.PROTECTION_FIRE, fire);
+											weapon.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, fire);
 										}
-										int blast=Integer.parseInt(settings.get("boss.armor.protection_explosions").toString());
-										if (blast!=0){
-											item.addUnsafeEnchantment(Enchantment.PROTECTION_EXPLOSIONS, blast);
-										}
+										if (knockback!=0){
+											weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, knockback);
+										}									
+										ee.setItemInMainHand(weapon);
 									}
-									ee.setBoots(boots);
-									ee.setLeggings(legs);
-									ee.setChestplate(chest);
-									ee.setHelmet(hat);
-									ItemStack weapon=new ItemStack(Material.DIAMOND_AXE,1);
-									int sharp=Integer.parseInt(settings.get("boss.weapon.sharpness").toString());
-									int smite=Integer.parseInt(settings.get("boss.weapon.smite").toString());;
-									int BOA=Integer.parseInt(settings.get("boss.weapon.BOA").toString());;
-									int fire=Integer.parseInt(settings.get("boss.weapon.fire").toString());;
-									int knockback=Integer.parseInt(settings.get("boss.weapon.knockback").toString());;
-									if (sharp!=0){
-										weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, sharp);
-									}
-									if (smite!=0){
-										weapon.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, smite);
-									}
-									if (BOA!=0){
-										weapon.addUnsafeEnchantment(Enchantment.DAMAGE_ARTHROPODS, BOA);
-									}
-									if (fire!=0){
-										weapon.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, fire);
-									}
-									if (knockback!=0){
-										weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, knockback);
-									}
-									ee.setItemInHand(weapon);
 									//more
 								}},20);
 							}},30);

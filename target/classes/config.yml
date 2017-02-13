@@ -240,6 +240,8 @@ messages:
 #==================================
 boss:
     enabled: true
+    mythicmobs: false
+    mythicmobname: "ExampleBoss"
     runs: 5
     name: "General of the Dark Force"
     health: 4000
