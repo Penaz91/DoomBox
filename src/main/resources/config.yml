@@ -241,8 +241,10 @@ messages:
 boss:
     enabled: true
     mythicmobs: false
-    mythicmobname: "ExampleBoss"
-    runs: 5
+    bosses:
+    - SkeletalKnight
+    - SkeletonKing
+    summonchance: 50
     name: "General of the Dark Force"
     health: 4000
     messages:

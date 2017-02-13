@@ -42,14 +42,13 @@ public class doombox extends JavaPlugin {
 	static Location loc=null;
 	static Location carpetloc=null;
 	static doombox instance=null;
-	static int runs=0;
+	static ArrayList<String> bossList;
+	static int chance=0;
 	static boolean triggered = false;
 	//-------------------------------------------------------------
-	@Override 
+	@Override
+	@SuppressWarnings("unchecked")
 	public void onEnable() {
-		getServer().getPluginManager().registerEvents(new BlockBreakerListener(), this);
-		getServer().getPluginManager().registerEvents(new MobDeathListener(), this);
-		getServer().getPluginManager().registerEvents(new BossHitListener(), this);
 		File f = getDataFolder();
 		if (!f.exists()){
 			f.mkdir();
@@ -58,7 +57,21 @@ public class doombox extends JavaPlugin {
 		}
 		settings=(HashMap<String, Object>) getConfig().getValues(true);
 		instance = this;
-		getLogger().info("DoomBox Loaded Successfully");
+		getLogger().info("World name is " + settings.get("world.name").toString());
+		if (Bukkit.getServer().getWorld(settings.get("world.name").toString())==null){
+			Bukkit.getServer().getLogger().warning("The world " + settings.get("world.name").toString() + " wasn't found, this plugin will disable itself");
+			Bukkit.getServer().getPluginManager().disablePlugin(this);
+		}else{
+			getServer().getPluginManager().registerEvents(new BlockBreakerListener(), this);
+			getServer().getPluginManager().registerEvents(new MobDeathListener(), this);
+			if (settings.get("boss.mythicmobs").toString().equalsIgnoreCase("false")){
+				getServer().getPluginManager().registerEvents(new BossHitListener(), this);
+			}else{
+				chance = Integer.parseInt(settings.get("boss.summonchance").toString());
+				bossList = (ArrayList<String>) settings.get("boss.bosses");
+			}
+			getLogger().info("DoomBox Loaded Successfully");
+		}
 	 }
 	@Override
 	public void onDisable() {
@@ -234,10 +247,12 @@ public class doombox extends JavaPlugin {
 		if (elist.isEmpty()){
 			boolean boss=settings.get("boss.enabled").toString().equalsIgnoreCase("true");
 			if (boss){
-				if (runs<Integer.parseInt(settings.get("boss.runs").toString())){
+				int r = rnd.nextInt(101);
+				Bukkit.getServer().getLogger().info("Random number: " + r + " vs chance " + chance);
+				if (r >= chance){
 					Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
 					loc.getBlock().setType(Material.AIR);
-					carpetloc.getBlock().setType(Material.AIR);
+					//carpetloc.getBlock().setType(Material.AIR);
 				}else{
 					boss();
 				}
@@ -740,7 +755,7 @@ public class doombox extends JavaPlugin {
 	}
 	public static void startSpawn(){
 		Bukkit.getServer().broadcastMessage(ChatColor.RED+settings.get("messages.open_message").toString());
-		runs++;
+		//runs++;
 		final int particles = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(doombox.getInstance(), new Runnable(){
 			public void run(){
 				loc.getWorld().playEffect(loc,Effect.MOBSPAWNER_FLAMES, 5000);
@@ -800,17 +815,16 @@ public class doombox extends JavaPlugin {
 							//more
 							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(doombox.getInstance(), new Runnable(){
 								public void run(){
-									runs=0;
+									//runs=0;
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().strikeLightning(loc);
 									loc.getWorld().createExplosion(loc,0.0F,false);
 									if (settings.get("boss.mythicmobs").toString().equalsIgnoreCase("true")){
-										Bukkit.getLogger().info("Entro Mythic");
-										Bukkit.getLogger().info("Comando: /" + "mm mobs spawn "+ settings.get("boss.mythicmobname").toString() +" 1 "+loc.getWorld().getName()+","+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
-										Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mm mobs spawn "+ settings.get("boss.mythicmobname").toString() +" 1 "+loc.getWorld().getName()+","+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
-									}
-									else{
+										String randBoss = bossList.get(rnd.nextInt(bossList.size())).toString();
+										Bukkit.getLogger().info("Comando: /" + "mm mobs spawn "+ randBoss +" 1 "+loc.getWorld().getName()+","+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
+										Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mm mobs spawn "+ randBoss +" 1 "+loc.getWorld().getName()+","+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
+									}else{
 										Bukkit.getServer().broadcastMessage(ChatColor.GOLD+settings.get("boss.name").toString()+": "+parseFormat(settings.get("boss.messages.boss_message").toString()));
 										LivingEntity boss=(LivingEntity) loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON);
 										loc.getBlock().setType(Material.AIR);
