@@ -133,38 +133,78 @@ public class doombox extends JavaPlugin {
 		boolean randomizer=settings.get("mob_settings.randomizer").toString().equalsIgnoreCase("true");
 		if (randomizer){
 			int nummobs=Integer.parseInt(settings.get("mob_settings.totalmobs").toString());
-			for (int i =0;i<nummobs;i++){
-				switch(rnd.nextInt(13)){
-					case 0: elist.add(loc.getWorld().spawnEntity(loc,EntityType.ZOMBIE));break;
-					case 1: elist.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));break;
-					case 2: elist.add(loc.getWorld().spawnEntity(loc,EntityType.PIG_ZOMBIE));break;
-					case 3: elist.add(loc.getWorld().spawnEntity(loc,EntityType.GHAST));break;
-					case 4: elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITCH));break;
-					case 5: elist.add(loc.getWorld().spawnEntity(loc,EntityType.CREEPER));break;
-					case 6: elist.add(loc.getWorld().spawnEntity(loc,EntityType.SPIDER));break;
-					case 7: elist.add(loc.getWorld().spawnEntity(loc,EntityType.ENDERMAN));break;
-					case 8: elist.add(loc.getWorld().spawnEntity(loc,EntityType.BLAZE));break;
-					case 9: elist.add(loc.getWorld().spawnEntity(loc,EntityType.SLIME));break;
-					case 10: elist.add(loc.getWorld().spawnEntity(loc,EntityType.CAVE_SPIDER));break;
-					case 11: elist.add(loc.getWorld().spawnEntity(loc,EntityType.MAGMA_CUBE));break;
-					case 12: elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON));break;
+			//for (int i =0;i<nummobs;i++){
+			int i = 0;
+			while (i<nummobs){
+				boolean summoned = false;
+				switch(rnd.nextInt(18)){
+					case 0: if (Integer.parseInt(settings.get("mob_settings.mobs.Zombies").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.ZOMBIE));summoned=true;}break;
+					case 1: if (Integer.parseInt(settings.get("mob_settings.mobs.Skeletons").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.SKELETON));summoned=true;}break;
+					case 2: if (Integer.parseInt(settings.get("mob_settings.mobs.Pigmen").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.PIG_ZOMBIE));summoned=true;}break;
+					case 3: if (Integer.parseInt(settings.get("mob_settings.mobs.Ghasts").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.GHAST));summoned=true;}break;
+					case 4: if (Integer.parseInt(settings.get("mob_settings.mobs.Witches").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITCH));summoned=true;}break;
+					case 5: if (Integer.parseInt(settings.get("mob_settings.mobs.Creepers").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.CREEPER));summoned=true;}break;
+					case 6: if (Integer.parseInt(settings.get("mob_settings.mobs.Spiders").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.SPIDER));summoned=true;}break;
+					case 7: if (Integer.parseInt(settings.get("mob_settings.mobs.Endermen").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.ENDERMAN));summoned=true;}break;
+					case 8: if (Integer.parseInt(settings.get("mob_settings.mobs.Blazes").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.BLAZE));summoned=true;}break;
+					case 9: if (Integer.parseInt(settings.get("mob_settings.mobs.Slimes").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.SLIME));summoned=true;}break;
+					case 10: if (Integer.parseInt(settings.get("mob_settings.mobs.CaveSpiders").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.CAVE_SPIDER));summoned=true;};break;
+					case 11: if (Integer.parseInt(settings.get("mob_settings.mobs.MagmaCubes").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.MAGMA_CUBE));summoned=true;}break;
+					case 12: if (Integer.parseInt(settings.get("mob_settings.mobs.WitherSkeletons").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON));summoned=true;}break;
+					case 13: if (Integer.parseInt(settings.get("mob_settings.mobs.SilverFish").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.SILVERFISH));summoned=true;}break;
+					case 14: if (Integer.parseInt(settings.get("mob_settings.mobs.Strays").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.STRAY));summoned=true;}break;
+					case 15: if (Integer.parseInt(settings.get("mob_settings.mobs.Vex").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.VEX));summoned=true;}break;
+					case 16: if (Integer.parseInt(settings.get("mob_settings.mobs.Husks").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.HUSK));summoned=true;}break;
+					case 17: if (Integer.parseInt(settings.get("mob_settings.mobs.Vindicators").toString())!=0) {elist.add(loc.getWorld().spawnEntity(loc,EntityType.VINDICATOR));summoned=true;}break;
 				}
-				elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
+				if (summoned){
+					//Bukkit.getServer().getLogger().info("i: " + i + " nummobs: " + nummobs);
+					if (settings.get("mob_settings.glowingMobs").toString().equalsIgnoreCase("true")){
+						elist.get(i).setGlowing(true);
+					}
+					elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
+					i++;
+				}
 			}
 		}else{
 			int zombies=Integer.parseInt(settings.get("mob_settings.mobs.Zombies").toString());
-			int skeletons=Integer.parseInt(settings.get("mob_settings.mobs.Skeletons").toString());;
-			int pigmen=Integer.parseInt(settings.get("mob_settings.mobs.Pigmen").toString());;
-			int ghasts=Integer.parseInt(settings.get("mob_settings.mobs.Ghasts").toString());;
-			int witches=Integer.parseInt(settings.get("mob_settings.mobs.Witches").toString());;
-			int creepers=Integer.parseInt(settings.get("mob_settings.mobs.Creepers").toString());;
-			int spiders=Integer.parseInt(settings.get("mob_settings.mobs.Spiders").toString());;
-			int endermen=Integer.parseInt(settings.get("mob_settings.mobs.Endermen").toString());;
-			int blazes=Integer.parseInt(settings.get("mob_settings.mobs.Blazes").toString());;
-			int slimes=Integer.parseInt(settings.get("mob_settings.mobs.Slimes").toString());;
-			int cavespiders=Integer.parseInt(settings.get("mob_settings.mobs.CaveSpiders").toString());;
-			int magma_cubes=Integer.parseInt(settings.get("mob_settings.mobs.MagmaCubes").toString());;
-			int wither_skeletons=Integer.parseInt(settings.get("mob_settings.mobs.WitherSkeletons").toString());;
+			int skeletons=Integer.parseInt(settings.get("mob_settings.mobs.Skeletons").toString());
+			int pigmen=Integer.parseInt(settings.get("mob_settings.mobs.Pigmen").toString());
+			int ghasts=Integer.parseInt(settings.get("mob_settings.mobs.Ghasts").toString());
+			int witches=Integer.parseInt(settings.get("mob_settings.mobs.Witches").toString());
+			int creepers=Integer.parseInt(settings.get("mob_settings.mobs.Creepers").toString());
+			int spiders=Integer.parseInt(settings.get("mob_settings.mobs.Spiders").toString());
+			int endermen=Integer.parseInt(settings.get("mob_settings.mobs.Endermen").toString());
+			int blazes=Integer.parseInt(settings.get("mob_settings.mobs.Blazes").toString());
+			int slimes=Integer.parseInt(settings.get("mob_settings.mobs.Slimes").toString());
+			int cavespiders=Integer.parseInt(settings.get("mob_settings.mobs.CaveSpiders").toString());
+			int magma_cubes=Integer.parseInt(settings.get("mob_settings.mobs.MagmaCubes").toString());
+			int wither_skeletons=Integer.parseInt(settings.get("mob_settings.mobs.WitherSkeletons").toString());
+			int silverfish=Integer.parseInt(settings.get("mob_settings.mobs.SilverFish").toString());
+			int strays=Integer.parseInt(settings.get("mob_settings.mobs.Strays").toString());
+			int vexes=Integer.parseInt(settings.get("mob_settings.mobs.Vex").toString());
+			int husks=Integer.parseInt(settings.get("mob_settings.mobs.Husks").toString());
+			int vindicators=Integer.parseInt(settings.get("mob_settings.mobs.Vindicators").toString());
+			//create silverfish
+			for (int i=0;i<silverfish;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.SILVERFISH));
+			}
+			//create strays
+			for (int i=0;i<strays;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.STRAY));
+			}
+			//create vexes
+			for (int i=0;i<vexes;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.VEX));
+			}
+			//create husks
+			for (int i=0;i<husks;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.HUSK));
+			}
+			//create vindicators
+			for (int i=0;i<vindicators;i++){
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.VINDICATOR));
+			}
 			//create Zombies
 			for (int i=0;i<zombies;i++){
 				elist.add(loc.getWorld().spawnEntity(loc,EntityType.ZOMBIE));
@@ -214,15 +254,20 @@ public class doombox extends JavaPlugin {
 				elist.add(loc.getWorld().spawnEntity(loc,EntityType.MAGMA_CUBE));
 			}
 			//create wither skeletons
-			ArrayList<Entity> with=new ArrayList<Entity>();
 			for (int i=0;i<wither_skeletons;i++){
-				with.add(loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON));
+				elist.add(loc.getWorld().spawnEntity(loc,EntityType.WITHER_SKELETON));
 			}
-			elist.addAll(with);
 		}
 		//Armor entities and launch them
-		ArrayList<EntityType> Armorable=new ArrayList<EntityType>(Arrays.asList(EntityType.ZOMBIE,EntityType.SKELETON,EntityType.PIG_ZOMBIE));
+		ArrayList<EntityType> Armorable=new ArrayList<EntityType>(Arrays.asList(EntityType.ZOMBIE,EntityType.SKELETON,EntityType.PIG_ZOMBIE, EntityType.WITHER_SKELETON, EntityType.HUSK, EntityType.STRAY));
 		for (int i=0;i<elist.size();i++){
+			if (settings.get("mob_settings.glowingMobs").toString().equalsIgnoreCase("true")){
+				elist.get(i).setGlowing(true);
+			}
+			// This should prevent despawning and item pickup from them
+			((LivingEntity) elist.get(i)).setRemoveWhenFarAway(false);
+			((LivingEntity) elist.get(i)).setCanPickupItems(false);
+			//---------------------------------------
 			elist.get(i).setVelocity(new Vector(rnd.nextInt(2),1,rnd.nextInt(2)));
 			if (Armorable.contains(elist.get(i).getType())){
 				boolean sets=settings.get("armor_settings.sets").toString().equalsIgnoreCase("true");
@@ -259,7 +304,7 @@ public class doombox extends JavaPlugin {
 			}else{
 				Bukkit.getServer().broadcastMessage(ChatColor.GREEN+settings.get("messages.end_message").toString());
 				loc.getBlock().setType(Material.AIR);
-				carpetloc.getBlock().setType(Material.AIR);
+				//carpetloc.getBlock().setType(Material.AIR);
 			}
 		}
 	}

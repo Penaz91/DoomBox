@@ -13,6 +13,7 @@ world:
 # === Basic Mob Settings ===
 #==================================
 mob_settings:
+    glowingMobs: true
     # Enables the mob randomizer, just give the total number of mobs to summon, the other options are ignored
     # If disabled, the total mobs will be ignored
     # For now only true works
@@ -47,6 +48,16 @@ mob_settings:
         MagmaCubes: 10
         # Number of Wither Skeletons to Summon
         WitherSkeletons: 10
+        # Number of Silverfish to Summon
+        SilverFish: 10
+        # Number of Skeleton Stray to Summon
+        Strays: 10
+        # Number of Vexes to Summon
+        Vex: 10
+        # Number of Husks to Summon
+        Husks: 10
+        # Number of Vindicators to Summon
+        Vindicators: 10
 #==================================
 # === Advanced Mob Settings ===
 #==================================
