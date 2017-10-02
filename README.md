@@ -1,3 +1,5 @@
+![Status:Maintenance Only](https://img.shields.io/badge/Project_Status-Maintenance_Only-yellow.svg)
+
 # Important
 
 Use the more updated version from the "DoomCrate" branch!
