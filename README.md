@@ -1,4 +1,4 @@
-![Status:Maintenance Only](https://img.shields.io/badge/Project_Status-Maintenance_Only-yellow.svg)
+![Status:Archived](https://img.shields.io/badge/Status-Archived-inactive)
 
 # Important
 
